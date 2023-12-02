@@ -154,6 +154,9 @@ IF(CPUINFO_SUPPORTED_PLATFORM AND CPUINFO_BUILD_BENCHMARKS)
   ENDIF()
 ENDIF()
 
+# Add CLOG Folder
+add_subdirectory(deps/clog)
+
 # ---[ cpuinfo library
 SET(CPUINFO_SRCS src/api.c src/cache.c src/init.c src/log.c)
 
