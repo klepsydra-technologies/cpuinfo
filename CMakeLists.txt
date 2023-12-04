@@ -154,6 +154,9 @@ IF(CPUINFO_SUPPORTED_PLATFORM AND CPUINFO_BUILD_BENCHMARKS)
   ENDIF()
 ENDIF()
 
+# Add CLOG Folder
+add_subdirectory(deps/clog)
+
 # ---[ cpuinfo library
 SET(CPUINFO_SRCS src/api.c src/cache.c src/init.c src/log.c)
 
@@ -232,6 +235,11 @@ IF(CPUINFO_SUPPORTED_PLATFORM)
     SET(THREADS_PREFER_PTHREAD_FLAG TRUE)
     FIND_PACKAGE(Threads REQUIRED)
   ENDIF()
+ENDIF()
+
+IF(${TARGET_OS} STREQUAL ${RTEMS5})
+  LIST(APPEND CPUINFO_SRCS
+    src/rtems/init.c)
 ENDIF()
 
 IF(CPUINFO_LIBRARY_TYPE STREQUAL "default")

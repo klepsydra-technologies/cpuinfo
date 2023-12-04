@@ -15,7 +15,7 @@
 
 #if defined(_WIN32) || defined(__CYGWIN__)
 	static INIT_ONCE init_guard = INIT_ONCE_STATIC_INIT;
-#elif !defined(__EMSCRIPTEN__) || defined(__EMSCRIPTEN_PTHREADS__)
+#elif (!defined(__EMSCRIPTEN__) || defined(__EMSCRIPTEN_PTHREADS__)) && !defined (__rtems__)
 	static pthread_once_t init_guard = PTHREAD_ONCE_INIT;
 #else
 	static bool init_guard = false;
@@ -39,6 +39,12 @@ bool CPUINFO_ABI cpuinfo_initialize(void) {
 		pthread_once(&init_guard, &cpuinfo_arm_mach_init);
 	#elif defined(_WIN32)
 		InitOnceExecuteOnce(&init_guard, &cpuinfo_arm_windows_init, NULL, NULL);
+	#elif defined (__rtems__)
+		if (!init_guard)
+		{
+			cpuinfo_arm_rtems_init();
+		}
+		init_guard = true;
 	#else
 		cpuinfo_log_error("operating system is not supported in cpuinfo");
 	#endif
