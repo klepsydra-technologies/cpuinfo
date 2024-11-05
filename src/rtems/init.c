@@ -3,11 +3,20 @@
 #include <cpuinfo/log.h>
 
 struct cpuinfo_arm_isa cpuinfo_isa = {
+#if CPUINFO_ARCH_ARM
 	.thumb = true,
 	.armv7 = true,
 	.vfpv2 = true,
 	.vfpv3 = true,
 	.neon = true,
+#endif
+#if CPUINFO_ARCH_ARM64
+	.atomics = true,
+	.bf16 = true,
+	.sve = true,
+	.sve2 = true,
+	.i8mm = true,
+#endif
 };
 
 void cpuinfo_arm_rtems_init(void) {
