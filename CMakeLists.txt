@@ -909,3 +909,12 @@ IF(CPUINFO_BUILD_PKG_CONFIG)
   DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
 
 ENDIF()
+
+if (CMAKE_BUILD_TYPE MATCHES Debug AND CMAKE_COMPILER_IS_GNUCXX)
+  include(cmake/CodeCoverage.cmake)
+  set(CODE_COVERAGE_VERBOSE ON)
+  append_coverage_compiler_flags()
+  set(COVERAGE_EXCLUDES "bench" "*build*" "deps" "test" "tools")
+  setup_target_for_coverage_gcovr_xml(NAME coverage-xml EXECUTABLE make all test)
+  setup_target_for_coverage_gcovr_html(NAME coverage-html EXECUTABLE make all test)
+endif ()
