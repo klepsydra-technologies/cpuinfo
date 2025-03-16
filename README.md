@@ -1,3 +1,15 @@
+### Klepsydra UT coverage
+
+```bash
+mkdir build && cd build/
+cmake ..
+make coverage-html
+```
+
+Then go to the gcovr [report](build/coverage-html/index.html).
+
+---
+
 # CPU INFOrmation library
 
 [![BSD (2 clause) License](https://img.shields.io/badge/License-BSD%202--Clause%20%22Simplified%22%20License-blue.svg)](https://github.com/pytorch/cpuinfo/blob/master/LICENSE)
