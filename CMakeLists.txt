@@ -113,7 +113,9 @@ ELSEIF(NOT CMAKE_SYSTEM_NAME MATCHES "^(Windows|WindowsStore|CYGWIN|MSYS|Darwin|
     MESSAGE(WARNING
       "Target operating system \"${CMAKE_SYSTEM_NAME}\" is not supported in cpuinfo. "
       "cpuinfo will compile, but cpuinfo_initialize() will always fail.")
-    SET(CPUINFO_SUPPORTED_PLATFORM FALSE)
+    IF (NOT TARGET_OS MATCHES "^(rtems[5-7])")
+      SET(CPUINFO_SUPPORTED_PLATFORM FALSE)
+    ENDIF()
   ENDIF()
 ENDIF()
 
@@ -215,6 +217,10 @@ IF(CPUINFO_SUPPORTED_PLATFORM)
       LIST(APPEND CPUINFO_SRCS
         src/arm/android/properties.c)
     ENDIF()
+    IF (TARGET_OS MATCHES "^(rtems[5-6])")
+      LIST(APPEND CPUINFO_SRCS
+        src/arm/rtems/init.c)
+    ENDIF()
   ELSEIF(CPUINFO_TARGET_PROCESSOR MATCHES "^(riscv(32|64))$")
     LIST(APPEND CPUINFO_SRCS
       src/riscv/uarch.c)
@@ -248,11 +254,6 @@ IF(CPUINFO_SUPPORTED_PLATFORM)
     SET(THREADS_PREFER_PTHREAD_FLAG TRUE)
     FIND_PACKAGE(Threads REQUIRED)
   ENDIF()
-ENDIF()
-
-IF((${TARGET_OS} STREQUAL ${RTEMS5} OR ${TARGET_OS} STREQUAL ${RTEMS6}) AND (NOT ${CMAKE_SYSTEM_PROCESSOR} STREQUAL "riscv"))
-  LIST(APPEND CPUINFO_SRCS
-    src/rtems/init.c)
 ENDIF()
 
 IF(CPUINFO_LIBRARY_TYPE STREQUAL "default")

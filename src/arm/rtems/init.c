@@ -24,30 +24,32 @@ void cpuinfo_arm_rtems_init(void) {
 	struct cpuinfo_core* cores = NULL;
 
   /* Allocate memory */
-	processors = calloc(1, sizeof(struct cpuinfo_processor));
+	processors = calloc(CONFIGURE_MAXIMUM_PROCESSORS, sizeof(struct cpuinfo_processor));
 	if (processors == NULL) {
 		cpuinfo_log_error("Failed to allocate for cpuinfo_processor");
 		goto cleanup;
 	}
-	cores = calloc(1, sizeof(struct cpuinfo_core));
+	cores = calloc(CONFIGURE_MAXIMUM_PROCESSORS, sizeof(struct cpuinfo_core));
 	if (cores == NULL) {
 		cpuinfo_log_error("Failed to allocate for cpuinfo_core");
 		goto cleanup;
 	}
 
   /* Populate Data */
-  /**
-   * TODO:
-   * Populate other structs for RTEMS Zed Board.
-   * Currently these are the only required information for QNNPACK.
-   */
-  processors[0].core = cores;
-  cores[0].uarch = cpuinfo_uarch_cortex_a9;
+	/**
+	 * TODO:
+	 * Populate other structs for RTEMS Zed Board.
+	 * Currently these are the only required information for QNNPACK.
+	 */
+    for (int i = 0; i < CONFIGURE_MAXIMUM_PROCESSORS; i++) {
+      processors[i].core = cores;
+      cores[i].uarch = cpuinfo_uarch_cortex_a9;
+    }
 
   /* Commit */
 	cpuinfo_processors = processors;
 	cpuinfo_cores = cores;
-  cpuinfo_cores_count = 1;
+    cpuinfo_cores_count = CONFIGURE_MAXIMUM_PROCESSORS;
 
 	__sync_synchronize();
 	cpuinfo_is_initialized = true;
