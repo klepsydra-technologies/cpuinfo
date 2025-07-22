@@ -23,7 +23,7 @@ void cpuinfo_arm_rtems_init(void) {
 	struct cpuinfo_processor* processors = NULL;
 	struct cpuinfo_core* cores = NULL;
 
-  /* Allocate memory */
+	/* Allocate memory */
 	processors = calloc(CONFIGURE_MAXIMUM_PROCESSORS, sizeof(struct cpuinfo_processor));
 	if (processors == NULL) {
 		cpuinfo_log_error("Failed to allocate for cpuinfo_processor");
@@ -35,21 +35,21 @@ void cpuinfo_arm_rtems_init(void) {
 		goto cleanup;
 	}
 
-  /* Populate Data */
+	/* Populate Data */
 	/**
 	 * TODO:
 	 * Populate other structs for RTEMS Zed Board.
 	 * Currently these are the only required information for QNNPACK.
 	 */
-    for (int i = 0; i < CONFIGURE_MAXIMUM_PROCESSORS; i++) {
-      processors[i].core = cores;
-      cores[i].uarch = cpuinfo_uarch_cortex_a9;
-    }
+	for (int i = 0; i < CONFIGURE_MAXIMUM_PROCESSORS; i++) {
+		processors[i].core = cores;
+		cores[i].uarch = cpuinfo_uarch_cortex_a9;
+	}
 
-  /* Commit */
+	/* Commit */
 	cpuinfo_processors = processors;
 	cpuinfo_cores = cores;
-    cpuinfo_cores_count = CONFIGURE_MAXIMUM_PROCESSORS;
+	cpuinfo_cores_count = CONFIGURE_MAXIMUM_PROCESSORS;
 
 	__sync_synchronize();
 	cpuinfo_is_initialized = true;
